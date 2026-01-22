@@ -20,6 +20,8 @@ pytest --disable-plugin-autoload -p plugins -q
 top-level package imports are accepted silently
 pytest --disable-plugin-autoload -p plugins -s
 
+Module import path (always works as expected)
+PYTHONPATH=. PYTEST_PLUGINS=plugins.live_plugin pytest -s
 
 
 
