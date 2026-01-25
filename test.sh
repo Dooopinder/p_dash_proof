@@ -12,7 +12,7 @@ testcase(){
    fi
    set +x
 }
-for p in plugins plugins.dead_plugin plugins.live_plugin; do
+for p in nonexistent plugins plugins.dead_plugin plugins.live_plugin; do
 for f in -q -s; do
 for e in '' "$p"; do
     testcase "$p" "$f" "$e"
