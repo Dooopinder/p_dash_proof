@@ -3,9 +3,9 @@
 
 export PYTHONPATH=.
 testcase(){
-   local p="$1" f="$2" e="$3"
+   local p="$1" f="$2" e="$3" t="$4"
    set -x
-   cmd=(PYTEST_PLUGINS="$e" pytest --disable-plugin-autoload -p "$p" "$f")
+   cmd=(PYTEST_PLUGINS="$e" pytest --disable-plugin-autoload -p "$p" "$f" -k "$t")
    if env "${cmd[@]}"
    then succ+=("${cmd[*]}")
    else fail+=("${cmd[*]}")
@@ -15,7 +15,9 @@ testcase(){
 for p in nonexistent plugins plugins.dead_plugin plugins.live_plugin; do
 for f in -q -s; do
 for e in '' "$p"; do
-    testcase "$p" "$f" "$e"
+for t in test_started test_loaded; do
+    testcase "$p" "$f" "$e" "$t"
+done
 done
 done
 done
