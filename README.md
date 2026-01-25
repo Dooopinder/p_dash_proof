@@ -2,6 +2,7 @@
 made to help a fellow named hseg
 in regards issues asked in #14113
 
+The test suite below can also be run automatically by running `test.sh`
 
 Before each run:
 set PYTHONPATH=.
