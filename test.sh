@@ -2,23 +2,33 @@
 # made to help a fellow named hseg in regards issues asked in #14113
 
 export PYTHONPATH=.
-echo '-p does no hook validation'
-pytest --disable-plugin-autoload -p plugins.dead_plugin -q
+testcase(){
+   local p="$1" f="$2" e="$3"
+   set -x
+   cmd=(PYTEST_PLUGINS="$e" pytest --disable-plugin-autoload -p "$p" "$f")
+   if env "${cmd[@]}"
+   then succ+=("${cmd[*]}")
+   else fail+=("${cmd[*]}")
+   fi
+   set +x
+}
+for p in plugins plugins.dead_plugin plugins.live_plugin; do
+for f in -q -s; do
+for e in '' "$p"; do
+    testcase "$p" "$f" "$e"
+done
+done
+done
 
-echo '-p can succeed but load a dead plugin'
-pytest --disable-plugin-autoload -p plugins.dead_plugin -s
+echo 'Successes:'
+printf '* %s\n' "${succ[@]}"
+echo
 
-echo 'entrypoint submodules are not auto-resolved'
-pytest --disable-plugin-autoload -p plugins -q
+echo 'Failures:'
+printf '* %s\n' "${fail[@]}"
+echo
 
-echo 'Now load the submodule explicitly:'
-pytest --disable-plugin-autoload -p plugins.live_plugin -s
-
-echo 'top-level package imports are accepted silently'
-pytest --disable-plugin-autoload -p plugins -s
-
-echo 'Module import path (always works as expected)'
-PYTHONPATH=. PYTEST_PLUGINS=plugins.live_plugin pytest -s
+echo '----------'
 
 echo 'Summary (what this proves)'
 echo
